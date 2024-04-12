@@ -1,10 +1,11 @@
 use rand::{
     distributions::{Distribution, Uniform},
-    Rng,
+    thread_rng, Rng,
 };
+use rand_distr::{Normal, NormalError};
 
 pub fn generate_rand_num() {
-    let mut rng = rand::thread_rng();
+    let mut rng = thread_rng();
 
     let n1: u8 = rng.gen();
     let n2: u16 = rng.gen();
@@ -17,7 +18,7 @@ pub fn generate_rand_num() {
 }
 
 pub fn generate_rand_num_range() {
-    let mut rng = rand::thread_rng();
+    let mut rng = thread_rng();
 
     // 生成一个范围在左闭右开区间的随机数
     // println!("Integer: {}", rng.gen_range(0..10));
@@ -34,4 +35,14 @@ pub fn generate_rand_num_range() {
             break;
         }
     }
+}
+
+pub fn generate_normal_sample(mean: f64, std_dev: f64) -> Result<(), NormalError> {
+    let mut rng = thread_rng();
+    let normal = Normal::new(mean, std_dev)?;
+    let sample = normal.sample(&mut rng);
+
+    println!("{} is from a N({}, {})", sample, mean, std_dev);
+
+    Ok(())
 }
