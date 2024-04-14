@@ -1,7 +1,8 @@
-use rand::{generate_rand_num, generate_rand_num_range};
+use rand::{
+    generate_normal_sample, generate_rand_num, generate_rand_num_range,
+    generate_rand_password_from_chars, generate_random_custom_type,
+};
 use rand_distr::NormalError;
-
-use crate::rand::{generate_normal_sample, generate_random_custom_type};
 
 mod rand;
 
@@ -20,6 +21,10 @@ fn main() -> Result<(), NormalError> {
     println!("------------------");
 
     generate_random_custom_type();
+
+    println!("------------------");
+
+    generate_rand_password_from_chars();
 
     Ok(())
 }

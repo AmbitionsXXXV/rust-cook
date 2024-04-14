@@ -2,7 +2,7 @@ use rand::{
     distributions::{Distribution, Uniform},
     thread_rng, Rng,
 };
-use rand_distr::{Normal, NormalError, Standard};
+use rand_distr::{Alphanumeric, Normal, NormalError, Standard};
 
 pub fn generate_rand_num() {
     let mut rng = thread_rng();
@@ -83,4 +83,22 @@ pub fn generate_random_custom_type() {
     println!("Random tuple: {:?}", rand_tuple);
     println!("Random point.x: {}", rand_point.x);
     println!("Random point.y: {}", rand_point.y);
+}
+
+/// 生成一个随机的 30 字符密码
+/// 随机生成一个给定长度的 ASCII 字符串，范围为 A-Z，a-z，0-9，使用字母数字样本
+pub fn generate_rand_password_from_chars() {
+    // 创建一个随机数生成器
+    let rand_string = thread_rng()
+        // 从 Alphanumeric 分布中采样字符。Alphanumeric 是一个产生包含大写字母、小写字母和数字的字符的分布
+        .sample_iter(&Alphanumeric)
+        // 设置生成字符串的长度为 30 个字符
+        .take(30)
+        // 将生成的随机字节转换为字符
+        .map(char::from)
+        // 将迭代器中的字符收集成一个字符串
+        .collect::<String>();
+
+    // 输出生成的随机字符串
+    println!("Random string: {}", rand_string);
 }
