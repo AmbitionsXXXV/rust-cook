@@ -102,3 +102,31 @@ pub fn generate_rand_password_from_chars() {
     // 输出生成的随机字符串
     println!("Random string: {}", rand_string);
 }
+
+// 使用用户自定义的字节字符串，使用 gen_range 函数，随机生成一个给定长度的 ASCII 字符串
+/// 从自定义字符集生成指定长度的随机密码
+pub fn gen_password_from_custom_chars() {
+    // 定义可用于生成密码的字符集
+    const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ\
+                            abcdefghijklmnopqrstuvwxyz\
+                            0123456789)(*&^%$#@!~";
+
+    // 定义生成密码的长度
+    const PASSWORD_LEN: usize = 30;
+
+    // 创建一个随机数生成器
+    let mut rng = rand::thread_rng();
+
+    // 生成一个随机密码
+    let password = (0..PASSWORD_LEN)
+        .map(|_| {
+            // 随机选择一个索引位置
+            let idx = rng.gen_range(0..CHARSET.len());
+            // 根据索引位置从字符集中选择字符，并转换为 char 类型
+            CHARSET[idx] as char
+        })
+        .collect::<String>(); // 将迭代器中的字符收集成一个完整的字符串
+
+    // 打印生成的密码
+    println!("{:?}", password);
+}

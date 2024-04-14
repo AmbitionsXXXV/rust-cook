@@ -1,6 +1,6 @@
 use rand::{
-    generate_normal_sample, generate_rand_num, generate_rand_num_range,
-    generate_rand_password_from_chars, generate_random_custom_type,
+    gen_password_from_custom_chars, generate_normal_sample, generate_rand_num,
+    generate_rand_num_range, generate_rand_password_from_chars, generate_random_custom_type,
 };
 use rand_distr::NormalError;
 
@@ -25,6 +25,10 @@ fn main() -> Result<(), NormalError> {
     println!("------------------");
 
     generate_rand_password_from_chars();
+
+    println!("------------------");
+
+    gen_password_from_custom_chars();
 
     Ok(())
 }
