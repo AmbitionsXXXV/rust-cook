@@ -2,7 +2,7 @@ use rand::{
     distributions::{Distribution, Uniform},
     thread_rng, Rng,
 };
-use rand_distr::{Normal, NormalError};
+use rand_distr::{Normal, NormalError, Standard};
 
 pub fn generate_rand_num() {
     let mut rng = thread_rng();
@@ -45,4 +45,42 @@ pub fn generate_normal_sample(mean: f64, std_dev: f64) -> Result<(), NormalError
     println!("{} is from a N({}, {})", sample, mean, std_dev);
 
     Ok(())
+}
+
+#[derive(Debug)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+// 随机生成一个元组 (i32, bool, f64) 和用户定义类型为 Point 的变量。
+// 为 Standard 实现 Distribution trait，以允许随机生成
+impl Distribution<Point> for Standard {
+    /// 从标准随机数生成器中生成一个随机的点。
+    ///
+    /// # 参数
+    ///
+    /// - `rng`：随机数生成器的引用。
+    ///
+    /// # 返回值
+    ///
+    /// 返回一个随机生成的点。
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Point {
+        let (rand_x, rand_y) = rng.gen();
+
+        Point {
+            x: rand_x,
+            y: rand_y,
+        }
+    }
+}
+
+pub fn generate_random_custom_type() {
+    let mut rng = rand::thread_rng();
+    let rand_tuple = rng.gen::<(i32, bool, f64)>();
+    let rand_point: Point = rng.gen();
+
+    println!("Random tuple: {:?}", rand_tuple);
+    println!("Random point.x: {}", rand_point.x);
+    println!("Random point.y: {}", rand_point.y);
 }
