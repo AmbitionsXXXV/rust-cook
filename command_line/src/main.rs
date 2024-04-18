@@ -1,3 +1,7 @@
+use cmd_line::arg_parsing;
+
+mod cmd_line;
+
 fn main() {
-    println!("Hello, world!");
+    arg_parsing();
 }
