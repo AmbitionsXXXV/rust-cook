@@ -1,3 +1,7 @@
+use threads::generate_short_term_threads;
+
+mod threads;
+
 fn main() {
-    println!("Hello, world!");
+    generate_short_term_threads();
 }
