@@ -4,7 +4,7 @@ use pack::{en_pack, unpack};
 mod pack;
 
 fn main() -> Result<()> {
-    // unpack()?;
+    unpack()?;
 
     en_pack()?;
 
