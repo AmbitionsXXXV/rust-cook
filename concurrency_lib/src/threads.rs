@@ -50,6 +50,40 @@ fn find_max(arr: &[i32]) -> Option<i32> {
 // 通过迭代器 crossbeam_channel::Receiver::iter 方法从信道读取数据，这将会造成阻塞，要么等待新消息，要么直到信道关闭。
 // 因为信道是在 crossbeam::scope 范围内创建的，我们必须通过 drop 手动关闭它们，以防止整个程序阻塞工作线程的 for 循环。
 // 你可以将对 drop 的调用视作不再发送消息的信号。
+
+/// 使用 crossbeam 实现的并发管道。
+///
+/// ## 功能
+/// 该函数创建并运行一个由生产者、工作线程（消费者）、接收器组成的管道模型。
+///
+/// ## 流程
+/// 1. **生产者**：负责发送固定数量的消息到第一个信道。
+/// 2. **工作线程**：并行从第一个信道接收消息，处理后发送到第二个信道。
+/// 3. **接收器**：从第二个信道接收所有消息，并打印。
+///
+/// ## 注意事项
+/// - 生产者发送的速度可能快于工作线程的处理速度，导致消息在第二个信道中积压。
+/// - 每个工作线程处理完消息后即发送到第二个信道，由于处理时间的模拟延迟，接收器可能交错接收到来自不同工作线程的消息。
+///
+/// # 示例输出分析
+/// ```
+/// Source sent 0
+/// Worker ThreadId(6) received 0.
+/// Source sent 1
+/// Sink received 0
+/// Worker ThreadId(5) received 1.
+/// Source sent 2
+/// Sink received 2
+/// Worker ThreadId(5) received 2.
+/// Source sent 3
+/// Sink received 4
+/// Worker ThreadId(5) received 3.
+/// Sink received 6
+/// ```
+/// - 生产者发送消息 0 后，线程 6 接收并处理该消息。
+/// - 接收器接收处理后的消息 0（0 * 2=0）。
+/// - 消息 1 和 2 由线程 5 处理，处理后的结果（2 和 4）被接收器接收。
+/// - 消息 3 最后被处理和接收（3 * 2=6）。
 pub fn create_concurrent_pipelines() {
     // 创建两个有界信道
     let (snd1, rcv1) = bounded(1);
