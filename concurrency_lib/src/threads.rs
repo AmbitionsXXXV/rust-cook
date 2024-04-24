@@ -1,6 +1,9 @@
 use std::{thread, time::Duration};
 
-use crossbeam::{channel::bounded, scope};
+use crossbeam::{
+    channel::{bounded, unbounded},
+    scope,
+};
 
 pub fn generate_short_term_threads() {
     let arr = &[1, 25, -4, 10];
@@ -129,4 +132,25 @@ pub fn create_concurrent_pipelines() {
         }
     })
     .unwrap(); // 确保处理作用域内的错误
+}
+
+pub fn passing_data_between_threads() {
+    let (snd, rcv) = unbounded();
+    let n_msgs = 5;
+
+    crossbeam::scope(|s| {
+        s.spawn(|_| {
+            for i in 0..n_msgs {
+                snd.send(i).unwrap();
+                thread::sleep(Duration::from_millis(100));
+            }
+        });
+    })
+    .unwrap();
+
+    for _ in 0..n_msgs {
+        let msg = rcv.recv().unwrap();
+
+        println!("Received {}", msg);
+    }
 }
