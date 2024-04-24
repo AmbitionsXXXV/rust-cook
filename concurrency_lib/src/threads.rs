@@ -134,23 +134,51 @@ pub fn create_concurrent_pipelines() {
     .unwrap(); // 确保处理作用域内的错误
 }
 
+/// 在多个线程间传递数据的示例。
+///
+/// ## 功能
+/// 此函数创建一个无界信道，并启动一个线程来发送一系列整数。主线程接收这些整数并打印。
+///
+/// ## 组件
+/// - `crossbeam::channel::unbounded`: 创建一个无界信道。无界信道不限制内存中可以积累的消息数量。
+/// - `crossbeam::scope`: 允许创建临时线程，并确保在离开作用域前这些线程已经完成。
+/// - `Sender<T>`: 用于发送消息的类型，其中 `T` 是消息的类型。
+/// - `Receiver<T>`: 用于接收消息的类型，其中 `T` 是消息的类型。
+/// - `thread::sleep`: 使当前线程暂停指定的时间。
+///
+/// ## 运行逻辑
+/// 1. **初始化信道**：使用 `unbounded` 创建一个无界的信道，包括发送者 (`snd`) 和接收者 (`rcv`)。
+/// 2. **发送线程**：在一个新的线程中，发送五个整数（从 0 到 4），每个整数发送后暂停 100 毫秒。
+/// 3. **接收和打印**：主线程接收这些消息并依次打印。
+///
+/// # 示例输出
+/// ```
+/// Received 0
+/// Received 1
+/// Received 2
+/// Received 3
+/// Received 4
+/// ```
 pub fn passing_data_between_threads() {
-    let (snd, rcv) = unbounded();
-    let n_msgs = 5;
+    // 创建一个无界信道
+    let (snd, rcv) = unbounded::<i32>();
 
+    // 使用 crossbeam 的作用域创建线程
     crossbeam::scope(|s| {
+        // 创建一个线程来发送数据
         s.spawn(|_| {
-            for i in 0..n_msgs {
+            for i in 0..5 {
                 snd.send(i).unwrap();
+                // 每发送一个消息后暂停 100 毫秒
                 thread::sleep(Duration::from_millis(100));
             }
         });
     })
-    .unwrap();
+    .unwrap(); // 确保所有线程在作用域结束前完成
 
-    for _ in 0..n_msgs {
+    // 主线程接收并打印消息
+    for _ in 0..5 {
         let msg = rcv.recv().unwrap();
-
         println!("Received {}", msg);
     }
 }
