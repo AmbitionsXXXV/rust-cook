@@ -1,3 +1,10 @@
 [workspace]
 resolver = "2"
-members = ["command_line", "concurrency_lib", 'random_num', "tar_pack", "vector_sort"]
+members = [
+  "command_line",
+  "concurrency_lib",
+  "parallel",
+  'random_num',
+  "tar_pack",
+  "vector_sort",
+]
