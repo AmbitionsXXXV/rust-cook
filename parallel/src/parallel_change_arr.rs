@@ -16,7 +16,7 @@ pub fn serial_change_arr_ele(arr: &mut [i32]) {
 /// # 示例
 ///
 /// ```
-/// use crate::parallel::parallel_change_arr_ele;
+/// use crate::parallel::parallel_change_arr::parallel_change_arr_ele;
 ///
 /// let mut arr = [0, 7, 9, 11];
 /// parallel_change_arr_ele(&mut arr);
