@@ -15,7 +15,7 @@ pub fn generate_short_term_threads() {
     }
 }
 
-fn find_max(arr: &[i32]) -> Option<i32> {
+pub fn find_max(arr: &[i32]) -> Option<i32> {
     const THRESHOLD: usize = 2; // 设定一个阈值，小于等于这个值时直接在当前线程计算最大值
 
     // 如果数组长度小于或等于阈值，直接计算最大值

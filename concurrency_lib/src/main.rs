@@ -1,10 +1,7 @@
-use threads::{
-    // create_concurrent_pipelines,
-    // generate_short_term_threads, 
-    passing_data_between_threads,
-};
-
+mod test;
 mod threads;
+
+pub use threads::*;
 
 fn main() {
     // generate_short_term_threads();
